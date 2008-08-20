@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<score:SContext xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:score="http://scoreabm.org/score" label="Rhein" ID="rhein" pluralLabel="Rheins">
+  <attributes label="Dike Base Cost" ID="dikeBaseCost" pluralLabel="Dike Base Costs" sType="FLOAT" defaultValue="250"/>
+  <attributes label="Dike Cost Per Cubic Meter" ID="dikeCostPerCubicMeter" pluralLabel="Dike Cost Per Cubic Meters" sType="FLOAT" defaultValue="0.5"/>
+  <attributes label="Steward Start Balance" ID="stewardStartBalance" pluralLabel="Steward Start Balances" sType="INTEGER" defaultValue="200000"/>
+  <attributes label="Steward Payment" ID="stewardPayment" pluralLabel="Steward Payments" sType="INTEGER" defaultValue="10000"/>
+  <implementation package="rhein" className="" basePath="../Rhein" mode="AUTO"/>
+  <agents label="Steward" ID="steward" pluralLabel="Stewards">
+    <attributes label="initialCount" ID="initialCount" pluralLabel="initialCounts" defaultValue="3"/>
+    <implementation className="Steward"/>
+  </agents>
+  <agents label="Source" ID="source" pluralLabel="Sources">
+    <implementation className="Source"/>
+  </agents>
+  <agents label="RiverScheduler" ID="riverScheduler" pluralLabel="RiverSchedulers">
+    <implementation className="RiverScheduler"/>
+  </agents>
+  <agents label="Segment" ID="segment" pluralLabel="Segments">
+    <implementation className="Segment"/>
+    <styles xsi:type="score:SStyle2D" label="SegmentStyle2D" ID="segmentStyle2D">
+      <implementation className="CStyle"/>
+    </styles>
+  </agents>
+  <agents label="StewardScheduler" ID="stewardScheduler" pluralLabel="StewardSchedulers">
+    <implementation className="StewardScheduler"/>
+  </agents>
+  <projections xsi:type="score:SNetwork" label="Rivers" ID="rivers" pluralLabel="Riverss" directed="true"/>
+  <projections xsi:type="score:SNetwork" label="StewardsRivers" ID="stewardsRivers" pluralLabel="StewardsRiverss" directed="true"/>
+  <projections xsi:type="score:SNetwork" label="Stewards" ID="stewards" pluralLabel="Stewardss"/>
+  <projections xsi:type="score:SGrid" label="Grid" ID="grid" pluralLabel="Grids" dimensionality="2">
+    <attributes xsi:type="score:SAttributeArray" label="Dimensions" ID="dimensions" pluralLabel="Dimensionss" description="The size of each dimension." sType="INTEGER" size="2"/>
+    <attributes label="Width" ID="width" pluralLabel="Widths" description="The horizontal extent of the space." sType="INTEGER" defaultValue="100"/>
+    <attributes label="Height" ID="height" pluralLabel="Heights" description="The vertical extent of the space." sType="INTEGER" defaultValue="100"/>
+  </projections>
+</score:SContext>
