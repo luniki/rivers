@@ -1,0 +1,8 @@
+<parameters>
+  <parameter name="costEffectivenessMetric"
+             displayName="Cost Effectiveness Metric"
+             type="String"
+             defaultValue="SINGLE"
+             values="'SINGLE' 'SUBBASIN' 'WHOLE'"/>
+</parameters>
+

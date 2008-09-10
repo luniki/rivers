@@ -4,6 +4,7 @@
 package rhein;
 
 
+import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.essentials.RepastEssentials;
 import repast.simphony.space.graph.Network;
 import cern.jet.random.Normal;
@@ -84,4 +85,21 @@ public class RheinHelper {
   public static double nextUniform(double from, double to) {
     return uniform.nextDoubleFromTo(from, to);
   }
+  
+  public static Boolean dikesAllowed() {
+	  return (Boolean) RunEnvironment.getInstance().getParameters().getValue("dikesAllowed");
+  }
+  
+  public static Boolean cooperationAllowed() {
+	  return (Boolean) RunEnvironment.getInstance().getParameters().getValue("cooperationAllowed");
+  }
+  
+  public static String costEffectivenessMetric() {
+	  return (String) RunEnvironment.getInstance().getParameters().getValue("costEffectivenessMetric");
+  }
+  
+  public static Integer numberOfLastInflows() {
+	  return (Integer) RunEnvironment.getInstance().getParameters().getValue("numberOfLastInflows");
+  }
 }
+

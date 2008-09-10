@@ -12,7 +12,7 @@
   </series>
   <showLegend>true</showLegend>
   <multipleSeries>false</multipleSeries>
-  <outputterFactory class="repast.simphony.chart.wizard.XYChartMappingsStep-XYFactory"/>
+  <outputterFactory class="repast.simphony.chart.wizard.XYChartMappingsStep$XYFactory"/>
   <dataSetHandler>
     <dataSets>
       <string>segments</string>

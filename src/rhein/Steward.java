@@ -120,6 +120,8 @@ public class Steward {
     for (Segment segment : getSegments()) {
       session.insert(segment, true);
     }
+    
+    // add configuration variables
 
     session.startProcess("ACTION_GENERATION_RULEFLOW");
     session.fireAllRules();

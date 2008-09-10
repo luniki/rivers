@@ -7,6 +7,7 @@ import rhein.AddRetentionBasin;
 import rhein.FloodProtection;
 import rhein.RaiseDike;
 import rhein.RetentionBasin;
+import rhein.RheinHelper;
 import rhein.Segment;
 import rhein.Steward;
 
@@ -70,7 +71,8 @@ rule "Action Generation: no floodprotection yet but in need"
 	when
 		$me: Steward( )
 		$segment: Segment( threatened == true )
-		not (exists  FloodProtection( segment == $segment ))
+		not ( exists  FloodProtection( segment == $segment ) )
+		eval ( RheinHelper.cooperationAllowed() )
 	then
 		Segment upstream = $segment.getUpstreamRetentionBasins();
 		if (upstream != null) {
@@ -93,18 +95,6 @@ end
 // NORMS
 //
 //
-
-
-/**
-rule "Norm: Don’t raise dikes"
-	// Agents must not choose a RaiseDike Action.
-	when
-		$raise: RaiseDike( )
-	then
-		System.out.format("  >>> no dikes, retracted %s\n", $raise);
-		retract($raise);
-end
-/**/
 
 
 rule "Norm: Don’t build own flood protection in not threatened segments"
@@ -168,6 +158,17 @@ rule "remove own floodprotections if someone else wants one"
 		System.out.format("  >>> retracted own %s\n", $f);
 end
 
+rule "Don't raise dikes, unless allowed"
+	// Agents must not choose a RaiseDike Action.
+	when
+		$raise: RaiseDike( )
+		not( eval( RheinHelper.dikesAllowed() ) )
+	then
+		System.out.format("  >>> no dikes, retracted %s\n", $raise);
+		retract($raise);
+end
+/**/
+
 
 /*
 rule "choose floodprotection"
@@ -185,17 +186,48 @@ rule "choose floodprotection"
 end
 /**/
 
-rule "choose floodprotection"
+rule "choose floodprotection using SINGLE metric"
 		ruleflow-group "action_selection"
 		salience 0
 	when
+		eval ( RheinHelper.costEffectivenessMetric().equals("SINGLE") )
+		$segment: Segment(  )
+		// TODO using hashCode is a hack, isn't it?
+		$f1: FloodProtection( segment == $segment, $efficiency: costEffectiveness, $hashCode: hashCode  )
+		$f2: FloodProtection( segment == $segment, costEffectiveness <= $efficiency, hashCode != $hashCode  )
+	then
+		$segment.removePossibleAction($f2);
+		System.out.format("  >>> retracted inferior using SINGLE metric %s\n", $f2);
+		retract($f2);
+end
+
+rule "choose floodprotection using SUBBASIN metric"
+		ruleflow-group "action_selection"
+		salience 0
+	when
+		eval ( RheinHelper.costEffectivenessMetric().equals("SUBBASIN") )
+		$segment: Segment(  )
+		// TODO using hashCode is a hack, isn't it?
+		$f1: FloodProtection( segment == $segment, $efficiency: subbasinCostEffectiveness, $hashCode: hashCode  )
+		$f2: FloodProtection( segment == $segment, subbasinCostEffectiveness <= $efficiency, hashCode != $hashCode  )
+	then
+		$segment.removePossibleAction($f2);
+		System.out.format("  >>> retracted inferior using SUBBASIN metric %s\n", $f2);
+		retract($f2);
+end
+
+rule "choose floodprotection using WHOLE metric"
+		ruleflow-group "action_selection"
+		salience 0
+	when
+		eval ( RheinHelper.costEffectivenessMetric().equals("WHOLE") )
 		$segment: Segment(  )
 		// TODO using hashCode is a hack, isn't it?
 		$f1: FloodProtection( segment == $segment, $efficiency: wholeBasinCostEffectiveness, $hashCode: hashCode  )
 		$f2: FloodProtection( segment == $segment, wholeBasinCostEffectiveness <= $efficiency, hashCode != $hashCode  )
 	then
 		$segment.removePossibleAction($f2);
-		System.out.format("  >>> retracted inferior %s\n", $f2);
+		System.out.format("  >>> retracted inferior using WHOLE metric %s\n", $f2);
 		retract($f2);
 end
 /**/
