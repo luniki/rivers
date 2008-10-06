@@ -1,0 +1,27 @@
+<repast.simphony.chart.engine.DefaultXYChartOutputterDescriptor>
+  <xColumnName>Tick</xColumnName>
+  <visibleXRange>100.0</visibleXRange>
+  <seriesType>POINT</seriesType>
+  <series>
+    <repast.simphony.chart.Series>
+      <seriesID>Name</seriesID>
+      <valueColumn>IntThreatened</valueColumn>
+      <hashCode>-3955983</hashCode>
+      <proxy>false</proxy>
+    </repast.simphony.chart.Series>
+  </series>
+  <showLegend>true</showLegend>
+  <multipleSeries>false</multipleSeries>
+  <outputterFactory class="repast.simphony.chart.wizard.XYChartMappingsStep$XYFactory"/>
+  <dataSetHandler>
+    <dataSets>
+      <string>segments</string>
+    </dataSets>
+  </dataSetHandler>
+  <streamHandler>
+    <columns/>
+  </streamHandler>
+  <isBatchAction>false</isBatchAction>
+  <dataSetId class="string">segments</dataSetId>
+  <name>Threatened Segments</name>
+</repast.simphony.chart.engine.DefaultXYChartOutputterDescriptor>

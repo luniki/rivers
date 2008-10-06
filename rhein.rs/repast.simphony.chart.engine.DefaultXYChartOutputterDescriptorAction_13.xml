@@ -1,0 +1,33 @@
+<repast.simphony.chart.engine.DefaultXYChartOutputterDescriptor>
+  <xColumnName>Tick</xColumnName>
+  <visibleXRange>200.0</visibleXRange>
+  <seriesType>POINT</seriesType>
+  <series>
+    <repast.simphony.chart.Series>
+      <seriesID>Name</seriesID>
+      <valueColumn>raisedDike</valueColumn>
+      <hashCode>213677143</hashCode>
+      <proxy>false</proxy>
+    </repast.simphony.chart.Series>
+    <repast.simphony.chart.Series>
+      <seriesID>Name</seriesID>
+      <valueColumn>addedRetentionBasin</valueColumn>
+      <hashCode>1966706299</hashCode>
+      <proxy>false</proxy>
+    </repast.simphony.chart.Series>
+  </series>
+  <showLegend>true</showLegend>
+  <multipleSeries>false</multipleSeries>
+  <outputterFactory class="repast.simphony.chart.wizard.XYChartMappingsStep$XYFactory"/>
+  <dataSetHandler>
+    <dataSets>
+      <string>segments</string>
+    </dataSets>
+  </dataSetHandler>
+  <streamHandler>
+    <columns/>
+  </streamHandler>
+  <isBatchAction>false</isBatchAction>
+  <dataSetId class="string">segments</dataSetId>
+  <name>Built Floodprotections</name>
+</repast.simphony.chart.engine.DefaultXYChartOutputterDescriptor>

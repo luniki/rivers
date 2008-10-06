@@ -1,0 +1,28 @@
+<repast.simphony.chart.engine.DefaultXYChartOutputterDescriptor>
+  <xColumnName>Tick</xColumnName>
+  <visibleXRange>200.0</visibleXRange>
+  <seriesType>LINE</seriesType>
+  <series>
+    <repast.simphony.chart.Series>
+      <seriesID>Name</seriesID>
+      <valueColumn>Freeboard</valueColumn>
+      <hashCode>1662711162</hashCode>
+      <proxy>false</proxy>
+    </repast.simphony.chart.Series>
+  </series>
+  <showLegend>true</showLegend>
+  <multipleSeries>false</multipleSeries>
+  <outputterFactory class="repast.simphony.chart.wizard.XYChartMappingsStep$XYFactory"/>
+  <dataSetHandler>
+    <dataSets>
+      <string>segments</string>
+      <string>freeboard</string>
+    </dataSets>
+  </dataSetHandler>
+  <streamHandler>
+    <columns/>
+  </streamHandler>
+  <isBatchAction>false</isBatchAction>
+  <dataSetId class="string">segments</dataSetId>
+  <name>Freeboard</name>
+</repast.simphony.chart.engine.DefaultXYChartOutputterDescriptor>
