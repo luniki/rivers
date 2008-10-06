@@ -1,10 +1,14 @@
 package rhein;
 
 
+import java.util.Vector;
+
 import repast.simphony.context.Context;
 import repast.simphony.context.space.graph.NetworkFactoryFinder;
 import repast.simphony.context.space.grid.GridFactoryFinder;
 import repast.simphony.dataLoader.ContextBuilder;
+import repast.simphony.engine.environment.RunEnvironment;
+import repast.simphony.parameter.Parameters;
 import repast.simphony.space.graph.Network;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridBuilderParameters;
@@ -25,7 +29,11 @@ public class RheinContext implements ContextBuilder<Object> {
   @Override
   public Context<Object> build(Context<Object> context) {
 
-    RheinHelper.init();
+    Parameters p = RunEnvironment.getInstance().getParameters();
+		
+	int seed = (Integer)p.getValue("rheinHelperSeed");
+		
+	RheinHelper.init(seed);
 
     Network<Object> stewardsRiversNet = NetworkFactoryFinder
         .createNetworkFactory(null).createNetwork("StewardsRivers", context,
@@ -70,18 +78,42 @@ public class RheinContext implements ContextBuilder<Object> {
     grid.moveTo(lahn_nahe, 0, 20);
     grid.moveTo(mosel, 0, 15);
     grid.moveTo(lippe_ruhr_sieg, 0, 10);
-
+    
+    Vector<RetentionBasin> retentionBasins;
+    
     Segment upper_rhine_1 = new Segment("Oberrhein (Basel)", 256, 5000, 756);
+    retentionBasins = new Vector<RetentionBasin>();
+    retentionBasins.add(new RetentionBasin(90, 4));
+    retentionBasins.add(new RetentionBasin(139, 4));
+    retentionBasins.add(new RetentionBasin(58, 4));
+    retentionBasins.add(new RetentionBasin(71, 4));
+    retentionBasins.add(new RetentionBasin(200, 4));
+    retentionBasins.add(new RetentionBasin(227, 4));
+    retentionBasins.add(new RetentionBasin(137, 4));
+    retentionBasins.add(new RetentionBasin(52, 4));
+    upper_rhine_1.setPossibleRetentionBasins(retentionBasins);
+    
     Segment upper_rhine_2 = new Segment("Oberrhein (Neckar)", 50, 6000, 0);
     Segment upper_rhine_3 = new Segment("Oberrhein (Main)", 66, 7200, 0);
+    retentionBasins = new Vector<RetentionBasin>();
+    retentionBasins.add(new RetentionBasin(65, 4));
+    upper_rhine_3.setPossibleRetentionBasins(retentionBasins);
 
     Segment lower_rhine_1 = new Segment("Unterrhein", 54, 8000, 0);
     lower_rhine_1.setMaxDikeCapacity(8000);
     lower_rhine_1.setNaturalDike(true);
+
     Segment lower_rhine_2 = new Segment("Unterrhein (Lahn/Mosel)", 110, 10000, 0);
     lower_rhine_2.setMaxDikeCapacity(10000);
     lower_rhine_2.setNaturalDike(true);
+    
     Segment lower_rhine_3 = new Segment("Unterrhein (Sieg/Ruhr/Lippe)", 142, 13300, 0);
+    retentionBasins = new Vector<RetentionBasin>();
+    retentionBasins.add(new RetentionBasin(26, 4));
+    retentionBasins.add(new RetentionBasin(170, 4));
+    retentionBasins.add(new RetentionBasin(197, 4));
+    retentionBasins.add(new RetentionBasin(100, 4));
+    lower_rhine_3.setPossibleRetentionBasins(retentionBasins);
 
     Segment rijn = new Segment("Rijn", 148, 15000, 0);
 

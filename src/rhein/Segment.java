@@ -16,71 +16,48 @@ import com.google.common.collect.Iterables;
  */
 public class Segment extends AbstractSegment {
 
-	/**
-   *
-   */
+	public static int getLengthOfSegments(Iterable<Segment> segments) {
+		int length = 0;
+		for (Segment s : segments) {
+			length += s.getLength();
+		}
+		return length;
+	}
+
 	protected int dikeCapacity;
 
-	/**
-   *
-   */
+	protected int freeboard;
+
+	public void setFreeboard(int freeboard) {
+		this.freeboard = freeboard;
+	}
+
 	protected int inflow;
 
-	/**
-   *
-   */
+	protected FloodProtection lastBuilt;
+
 	protected CircularFifoBuffer lastInflows;
 
-	/**
-   *
-   */
 	protected int length;
 
-	/**
-   *
-   */
 	protected int maxDikeCapacity;
 
-	/**
-   *
-   */
 	protected int minDischarge;
 
-	/**
-   *
-   */
 	protected boolean naturalDike;
 
-	/**
-   *
-   */
 	protected int overflow;
 
 	protected Vector<FloodProtection> possibleActions = new Vector<FloodProtection>();
 
-	/**
-   *
-   */
 	protected Vector<RetentionBasin> possibleRetentionBasins = new Vector<RetentionBasin>();
 
-	/**
-   *
-   */
 	protected int retainable;
 
-	/**
-   *
-   */
 	protected int retained;
 
-	/**
-   *
-   */
 	protected double safety;
 
-	/**
-   *
-   */
 	public Segment() {
 		this("Segment", 100, 1000, 400);
 	}
@@ -102,7 +79,8 @@ public class Segment extends AbstractSegment {
 
 		reset();
 
-		this.lastInflows = new CircularFifoBuffer(RheinHelper.numberOfLastInflows());
+		this.lastInflows = new CircularFifoBuffer(RheinHelper
+				.numberOfLastInflows());
 
 		this.minDischarge = 400;
 		this.maxDikeCapacity = 20000;
@@ -128,6 +106,28 @@ public class Segment extends AbstractSegment {
 		int old = this.retainable;
 		this.retainable += retentionBasin.getCapacity();
 		changes.firePropertyChange("retainable", old, this.retainable);
+	}
+
+	/**
+	 * @return the lastInflows
+	 */
+	public void addToLastInflows(Integer inflow) {
+
+		// TODO: quite hacky; where should I put this?
+		int newSize = RheinHelper.numberOfLastInflows();
+		if (newSize != lastInflows.maxSize()) {
+			CircularFifoBuffer tmp = new CircularFifoBuffer(newSize);
+			for (Object o : getLastInflows()) {
+				tmp.add(o);
+			}
+			System.out
+					.format(
+							"NOTE: resizing lastInflows buffer for Segment %s from %s to %s\n",
+							this, getLastInflows(), tmp);
+			setLastInflows(tmp);
+		}
+
+		lastInflows.add(inflow);
 	}
 
 	public void clearPossibleActions() {
@@ -156,6 +156,8 @@ public class Segment extends AbstractSegment {
 		setOverflow(Math.max(0, waterLeft - dikeCapacity));
 
 		setDischarge(waterLeft - (isNaturalDike() ? 0 : overflow));
+		
+		setFreeboard(waterLeft - (retainable + getSafeDikeCapacity()));
 	}
 
 	/**
@@ -184,30 +186,10 @@ public class Segment extends AbstractSegment {
 		return dikeCapacity;
 	}
 
-	public static int getLengthOfSegments(Iterable<Segment> segments) {
-		int length = 0;
-		for (Segment s : segments) {
-			length += s.getLength();
-		}
-		return length;
-	}
-
-	public int getLengthOfDownstream() {
-		return getLengthOfSegments(getDownstreamSegments());
-	}
-
-	public int getLengthOfDownstream(Predicate<Segment> p) {
-		return getLengthOfSegments(getDownstreamSegments(p));
-	}
-
 	public Iterable<Segment> getDownstreamSegments() {
 		ArrayList<Segment> segments = new ArrayList<Segment>();
 		getDownstreamSegments(segments);
 		return segments;
-	}
-
-	public Iterable<Segment> getDownstreamSegments(Predicate<Segment> p) {
-		return Iterables.filter(getDownstreamSegments(), p);
 	}
 
 	private void getDownstreamSegments(ArrayList<Segment> segments) {
@@ -227,6 +209,17 @@ public class Segment extends AbstractSegment {
 		}
 	}
 
+	public Iterable<Segment> getDownstreamSegments(Predicate<Segment> p) {
+		return Iterables.filter(getDownstreamSegments(), p);
+	}
+
+	/**
+	 * @return the freeboard of this segment
+	 */
+	public int getFreeboard() {
+		return freeboard;
+	}
+
 	/**
 	 * @return
 	 */
@@ -234,11 +227,37 @@ public class Segment extends AbstractSegment {
 		return inflow;
 	}
 
+	public FloodProtection getLastBuilt() {
+		return lastBuilt;
+	}
+
+	public String getLastBuiltClassName() {
+		if (lastBuilt == null) {
+			return "";
+		}
+		return lastBuilt.getClass().getSimpleName();
+	}
+
+	/**
+	 * @return the lastInflows
+	 */
+	public BoundedFifoBuffer getLastInflows() {
+		return lastInflows;
+	}
+
 	/**
 	 * @return
 	 */
 	public int getLength() {
 		return length;
+	}
+
+	public int getLengthOfDownstream() {
+		return getLengthOfSegments(getDownstreamSegments());
+	}
+
+	public int getLengthOfDownstream(Predicate<Segment> p) {
+		return getLengthOfSegments(getDownstreamSegments(p));
 	}
 
 	/**
@@ -290,11 +309,39 @@ public class Segment extends AbstractSegment {
 		return retained;
 	}
 
+	public int getSafeDikeCapacity() {
+		return (int) (safety * getDikeCapacity());
+	}
+
 	/**
 	 * @return the safety
 	 */
 	public double getSafety() {
 		return safety;
+	}
+
+	/**
+	 * @return
+	 */
+	public int getSimpleMovingAverageOfLastInflows() {
+		float result = 0;
+		for (Object i : getLastInflows()) {
+			result += (Integer) i;
+		}
+		return Math.round(result / getLastInflows().size());
+	}
+
+	/**
+	 * @return
+	 */
+	public int getMaximumOfLastInflows() {
+		int max = Integer.MIN_VALUE;
+		for (Object i : getLastInflows()) {
+			if ((Integer)i > max) {
+				max = (Integer) i;
+			}
+		}
+		return max;
 	}
 
 	/**
@@ -364,8 +411,8 @@ public class Segment extends AbstractSegment {
 	 */
 	public boolean isThreatened() {
 		return overflow > 0
-				|| (getSimpleMovingAverageOfLastInflows() - retainable) >= dikeCapacity
-						* safety;
+				|| (getMaximumOfLastInflows() >= retainable
+						+ getSafeDikeCapacity());
 	}
 
 	/**
@@ -417,6 +464,18 @@ public class Segment extends AbstractSegment {
 		changes.firePropertyChange("inflow", old, this.inflow);
 	}
 
+	protected void setLastBuilt(FloodProtection lastBuilt) {
+		this.lastBuilt = lastBuilt;
+	}
+
+	/**
+	 * @param lastInflows
+	 *            the lastInflows to set
+	 */
+	protected void setLastInflows(CircularFifoBuffer lastInflows) {
+		this.lastInflows = lastInflows;
+	}
+
 	/**
 	 * @param length
 	 */
@@ -462,6 +521,11 @@ public class Segment extends AbstractSegment {
 		int old = this.overflow;
 		this.overflow = overflow;
 		changes.firePropertyChange("overflow", old, this.overflow);
+	}
+
+	public void setPossibleRetentionBasins(
+			Vector<RetentionBasin> possibleRetentionBasins) {
+		this.possibleRetentionBasins = possibleRetentionBasins;
 	}
 
 	/**
@@ -513,53 +577,5 @@ public class Segment extends AbstractSegment {
 	public String toString() {
 		return String.format("%s i%d/o%d/d%d/r%d th %s", name, inflow,
 				overflow, discharge, retained, isThreatened() ? "y" : "n");
-	}
-
-	/**
-	 * @return the lastInflows
-	 */
-	public BoundedFifoBuffer getLastInflows() {
-		return lastInflows;
-	}
-
-	/**
-	 * @return
-	 */
-	public int getSimpleMovingAverageOfLastInflows() {
-		float result = 0;
-		for (Object i : getLastInflows()) {
-			result += (Integer) i;
-		}
-		return Math.round(result / getLastInflows().size());
-	}
-
-	/**
-	 * @return the lastInflows
-	 */
-	public void addToLastInflows(Integer inflow) {
-
-		// TODO: quite hacky; where should I put this?
-		int newSize = RheinHelper.numberOfLastInflows();
-		if (newSize != lastInflows.maxSize()) {
-			CircularFifoBuffer tmp = new CircularFifoBuffer(newSize);
-			for (Object o : getLastInflows()) {
-				tmp.add(o);
-			}
-			System.out
-					.format(
-							"NOTE: resizing lastInflows buffer for Segment %s from %s to %s\n",
-							this, getLastInflows(), tmp);
-			setLastInflows(tmp);
-		}
-
-		lastInflows.add(inflow);
-	}
-
-	/**
-	 * @param lastInflows
-	 *            the lastInflows to set
-	 */
-	protected void setLastInflows(CircularFifoBuffer lastInflows) {
-		this.lastInflows = lastInflows;
 	}
 }

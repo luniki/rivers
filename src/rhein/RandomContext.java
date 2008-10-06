@@ -27,7 +27,11 @@ public class RandomContext implements ContextBuilder<Object> {
   @Override
   public Context<Object> build(Context<Object> context) {
 
-    RheinHelper.init();
+	Parameters p = RunEnvironment.getInstance().getParameters();
+	
+	int seed = (Integer)p.getValue("rheinHelperSeed");
+	
+    RheinHelper.init(seed);
 
     Network<Object> stewardsRiversNet = NetworkFactoryFinder
         .createNetworkFactory(null).createNetwork("StewardsRivers", context,
@@ -46,7 +50,6 @@ public class RandomContext implements ContextBuilder<Object> {
         GridBuilderParameters.singleOccupancy2D(new RandomGridAdder<Object>(),
             new StickyBorders(), 100, 100));
 
-    Parameters p = RunEnvironment.getInstance().getParameters();
 
     // //////////////////////////////
     //
@@ -96,7 +99,10 @@ public class RandomContext implements ContextBuilder<Object> {
 
         Segment segment = new Segment("Segment " + i + "-" + j, length,
             capacity, 0);
-
+        segment.generatePossibleRetentionBasin();
+        segment.generatePossibleRetentionBasin();
+        segment.generatePossibleRetentionBasin();
+        
         context.add(source);
         context.add(segment);
 

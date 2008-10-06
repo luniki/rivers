@@ -3,7 +3,6 @@
  */
 package rhein;
 
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.InputStreamReader;
@@ -22,249 +21,241 @@ import org.drools.compiler.PackageBuilderConfiguration;
 
 import repast.simphony.space.graph.Network;
 
-
 /**
  * @author mlunzena
- *
+ * 
  */
 public class Steward {
 
-
-  /**
+	/**
    *
    */
-  private long balance = 0;
+	private long balance = 0;
 
-
-  /**
+	/**
    *
    */
-  private final PropertyChangeSupport changes = new PropertyChangeSupport(this);
+	private final PropertyChangeSupport changes = new PropertyChangeSupport(
+			this);
 
-
-  /**
+	/**
    *
    */
-  private String name;
+	private String name;
 
-
-  /**
+	/**
    *
    */
-  private RuleBase ruleBase;
+	private RuleBase ruleBase;
 
-
-  /**
+	/**
    *
    */
-  private StatefulSession session;
+	private StatefulSession session;
 
+	/**
+	 * Contains the sum of all the money spent to build or enhance flood
+	 * protections.
+	 */
+	private long totalSpent;
 
-  /**
+	/**
    *
    */
-  public Steward() {
-    this("", 200000);
-  }
+	public Steward() {
+		this("", 200000);
+	}
 
+	/**
+	 * Bean constructor.
+	 */
+	public Steward(String name, long balance) {
 
-  /**
-   * Bean constructor.
-   */
-  public Steward(String name, long balance) {
+		this.name = name;
+		setBalance(balance);
 
-    this.name = name;
-    setBalance(balance);
+		loadRuleFile();
+	}
 
-    loadRuleFile();
-  }
+	public void addPropertyChangeListener(final PropertyChangeListener l) {
+		this.changes.addPropertyChangeListener(l);
+	}
 
+	// @ScheduledMethod(start = 1, interval = 1, priority = -1, shuffle = false)
+	public void chooseActions() {
 
-  public void addPropertyChangeListener(final PropertyChangeListener l) {
-    this.changes.addPropertyChangeListener(l);
-  }
+		session = ruleBase.newStatefulSession();
+		session.insert(this, true);
 
+		for (Segment segment : getSegments()) {
+			session.insert(segment, true);
+		}
 
-  // @ScheduledMethod(start = 1, interval = 1, priority = -1, shuffle = false)
-  public void chooseActions() {
+		session.startProcess("ACTION_SELECTION_RULEFLOW");
+		session.fireAllRules();
+		session.dispose();
 
-    session = ruleBase.newStatefulSession();
-    session.insert(this, true);
+		for (Segment s : getSegments()) {
+			s.setLastBuilt(null);
+			if (s.getPossibleActions().size() > 0) {
+				FloodProtection construct = s.getPossibleActions()
+						.firstElement();
+				construct.execute();
+				s.setLastBuilt(construct);
+				System.out.format("  >>> constructed %s\n", construct);
+				s.clearPossibleActions();
+			}
+		}
+	}
 
-    for (Segment segment : getSegments()) {
-      session.insert(segment, true);
-    }
+	/**
+	 * @param amount
+	 */
+	public void depositMoney(long amount) {
+		this.balance += amount;
+	}
 
-    session.startProcess("ACTION_SELECTION_RULEFLOW");
-    session.fireAllRules();
-    session.dispose();
+	// @ScheduledMethod(start = 1, interval = 1, priority = 0, shuffle = false)
+	public void generatePossibleActions() {
 
-    for (Segment s : getSegments()) {
-      if (s.getPossibleActions().size() > 0) {
-        FloodProtection construct = s.getPossibleActions().firstElement();
-        construct.execute();
-        System.out.format("  >>> constructed %s\n", construct);
-        s.clearPossibleActions();
-      }
-    }
-  }
+		session = ruleBase.newStatefulSession();
+		session.insert(this, true);
 
+		for (Segment segment : getSegments()) {
+			session.insert(segment, true);
+		}
 
-  // @ScheduledMethod(start = 1, interval = 1, priority = 0, shuffle = false)
-  public void generatePossibleActions() {
+		// add configuration variables
 
+		session.startProcess("ACTION_GENERATION_RULEFLOW");
+		session.fireAllRules();
 
-    session = ruleBase.newStatefulSession();
-    session.insert(this, true);
+		QueryResults results = session.getQueryResults("all floodprotections");
 
-    for (Segment segment : getSegments()) {
-      session.insert(segment, true);
-    }
-    
-    // add configuration variables
+		for (Iterator<?> it = results.iterator(); it.hasNext();) {
+			QueryResult result = (QueryResult) it.next();
+			FloodProtection floodProtection = (FloodProtection) result
+					.get("floodprotection");
+			floodProtection.getSegment().addPossibleAction(floodProtection);
+			System.out
+					.format("  >>> set possible action %s\n", floodProtection);
+		}
 
-    session.startProcess("ACTION_GENERATION_RULEFLOW");
-    session.fireAllRules();
+		session.dispose();
+	}
 
-    QueryResults results = session.getQueryResults("all floodprotections");
+	/**
+	 * @return
+	 */
+	public long getBalance() {
+		return balance;
+	}
 
-    for (Iterator<?> it = results.iterator(); it.hasNext();) {
-      QueryResult result = (QueryResult) it.next();
-      FloodProtection floodProtection = (FloodProtection) result
-          .get("floodprotection");
-      floodProtection.getSegment().addPossibleAction(floodProtection);
-      System.out.format("  >>> set possible action %s\n", floodProtection);
-    }
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
 
-    session.dispose();
-  }
+	/**
+	 * @return
+	 */
+	public Vector<Segment> getSegments() {
+		Network<Object> net = RheinHelper.getStewardRiverNetwork();
 
+		Vector<Segment> segments = new Vector<Segment>();
+		for (Object o : net.getAdjacent(this)) {
+			if (o instanceof Segment) {
+				segments.add((Segment) o);
+			}
+		}
+		return segments;
+	}
 
-  /**
-   * @return
-   */
-  public long getBalance() {
-    return balance;
-  }
+	/**
+	 * @return the total amount of money spent on flood protections.
+	 */
+	public long getTotalSpent() {
+		return totalSpent;
+	}
 
-
-  /**
-   * @return the name
-   */
-  public String getName() {
-    return name;
-  }
-
-
-  /**
-   * @return
-   */
-  public Vector<Segment> getSegments() {
-    Network<Object> net = RheinHelper.getStewardRiverNetwork();
-
-    Vector<Segment> segments = new Vector<Segment>();
-    for (Object o : net.getAdjacent(this)) {
-      if (o instanceof Segment) {
-        segments.add((Segment) o);
-      }
-    }
-    return segments;
-  }
-
-
-  /**
+	/**
    *
    */
-  private void loadRuleFile() {
-    try {
+	private void loadRuleFile() {
+		try {
 
-      ClassLoader classLoader = Steward.class.getClassLoader();
+			ClassLoader classLoader = Steward.class.getClassLoader();
 
-      PackageBuilderConfiguration configuration = new PackageBuilderConfiguration(
-          classLoader);
-      PackageBuilder builder = new PackageBuilder(configuration);
+			PackageBuilderConfiguration configuration = new PackageBuilderConfiguration(
+					classLoader);
+			PackageBuilder builder = new PackageBuilder(configuration);
 
+			Reader rulesFile = new InputStreamReader(Steward.class
+					.getResourceAsStream("../Steward.drl"));
 
-      Reader rulesFile = new InputStreamReader(Steward.class
-          .getResourceAsStream("../Steward.drl"));
+			builder.addPackageFromDrl(rulesFile);
 
-      builder.addPackageFromDrl(rulesFile);
+			Reader ruleFlowFile1 = new InputStreamReader(Steward.class
+					.getResourceAsStream("../ActionGeneration.rfm"));
+			Reader ruleFlowFile2 = new InputStreamReader(Steward.class
+					.getResourceAsStream("../ActionSelection.rfm"));
 
+			builder.addRuleFlow(ruleFlowFile1);
+			builder.addRuleFlow(ruleFlowFile2);
 
-      Reader ruleFlowFile1 = new InputStreamReader(Steward.class
-          .getResourceAsStream("../ActionGeneration.rfm"));
-      Reader ruleFlowFile2 = new InputStreamReader(Steward.class
-          .getResourceAsStream("../ActionSelection.rfm"));
+			if (builder.hasErrors()) {
+				System.out.println(builder.getErrors().toString());
+				throw new RuntimeException("Unable to compile rule file.");
+			}
 
-      builder.addRuleFlow(ruleFlowFile1);
-      builder.addRuleFlow(ruleFlowFile2);
+			RuleBaseConfiguration ruleBaseConfiguration = new RuleBaseConfiguration(
+					classLoader);
 
+			ruleBase = RuleBaseFactory.newRuleBase(ruleBaseConfiguration);
+			ruleBase.addPackage(builder.getPackage());
 
-      if (builder.hasErrors()) {
-        System.out.println(builder.getErrors().toString());
-        throw new RuntimeException("Unable to compile rule file.");
-      }
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
 
+	public void removePropertyChangeListener(final PropertyChangeListener l) {
+		this.changes.removePropertyChangeListener(l);
+	}
 
-      RuleBaseConfiguration ruleBaseConfiguration = new RuleBaseConfiguration(
-          classLoader);
+	/**
+	 * @param balance
+	 */
+	public void setBalance(long balance) {
+		this.balance = balance;
+	}
 
-      ruleBase = RuleBaseFactory.newRuleBase(ruleBaseConfiguration);
-      ruleBase.addPackage(builder.getPackage());
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(String name) {
+		String old = this.name;
+		this.name = name;
+		changes.firePropertyChange("name", old, name);
+	}
 
+	public String toString() {
+		return "Steward[name=" + name + ", balance=" + balance + "]";
+	}
 
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new RuntimeException(e);
-    }
-  }
-
-
-  public void removePropertyChangeListener(final PropertyChangeListener l) {
-    this.changes.removePropertyChangeListener(l);
-  }
-
-
-  /**
-   * @param amount
-   */
-  public void depositMoney(long amount) {
-    this.balance += amount;
-  }
-
-
-  /**
-   * @param balance
-   */
-  public void setBalance(long balance) {
-    this.balance = balance;
-  }
-
-
-  /**
-   * @param name
-   *          the name to set
-   */
-  public void setName(String name) {
-    String old = this.name;
-    this.name = name;
-    changes.firePropertyChange("name", old, name);
-  }
-
-
-  /**
-   * @param amount
-   */
-  public void withdrawMoney(long amount) {
-    if (balance < amount) {
-      // TODO
-      throw new RuntimeException("insufficient funds");
-    }
-    this.balance -= amount;
-  }
-
-
-  public String toString() {
-    return "Steward[name=" + name + ", balance=" + balance + "]";
-  }
+	/**
+	 * @param amount
+	 */
+	public void withdrawMoney(long amount) {
+		if (balance < amount) {
+			// TODO
+			throw new RuntimeException("insufficient funds");
+		}
+		this.balance -= amount;
+		this.totalSpent += amount;
+	}
 }

@@ -52,8 +52,8 @@ public class RheinHelper {
   }
 
 
-  public static void init() {
-    RheinHelper.generator = new MersenneTwister(0);
+  public static void init(int seed) {
+    RheinHelper.generator = new MersenneTwister(seed);
     RheinHelper.normal = new Normal(0, 1, RheinHelper.generator);
     RheinHelper.uniform = new Uniform(0, 1, RheinHelper.generator);
   }
