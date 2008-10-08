@@ -99,15 +99,15 @@ public class RheinContext implements ContextBuilder<Object> {
     retentionBasins.add(new RetentionBasin(65, 4));
     upper_rhine_3.setPossibleRetentionBasins(retentionBasins);
 
-    Segment lower_rhine_1 = new Segment("Unterrhein", 54, 8000, 0);
+    Segment lower_rhine_1 = new Segment("Niederrhein", 54, 8000, 0);
     lower_rhine_1.setMaxDikeCapacity(8000);
     lower_rhine_1.setNaturalDike(true);
 
-    Segment lower_rhine_2 = new Segment("Unterrhein (Lahn/Mosel)", 110, 10000, 0);
+    Segment lower_rhine_2 = new Segment("Niederrhein (Lahn/Mosel)", 110, 10000, 0);
     lower_rhine_2.setMaxDikeCapacity(10000);
     lower_rhine_2.setNaturalDike(true);
     
-    Segment lower_rhine_3 = new Segment("Unterrhein (Sieg/Ruhr/Lippe)", 142, 13300, 0);
+    Segment lower_rhine_3 = new Segment("Niederrhein (Sieg/Ruhr/Lippe)", 142, 13300, 0);
     retentionBasins = new Vector<RetentionBasin>();
     retentionBasins.add(new RetentionBasin(26, 4));
     retentionBasins.add(new RetentionBasin(170, 4));
