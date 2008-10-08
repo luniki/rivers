@@ -43,7 +43,8 @@ public class RheinContext implements ContextBuilder<Object> {
         .createNetwork("Rivers", context, true);
 
 
-    Network<Object> stewardsNet = NetworkFactoryFinder.createNetworkFactory(
+    @SuppressWarnings("unused")
+	Network<Object> stewardsNet = NetworkFactoryFinder.createNetworkFactory(
         null).createNetwork("Stewards", context, true);
 
     Grid<Object> grid = GridFactoryFinder.createGridFactory(null).createGrid(
