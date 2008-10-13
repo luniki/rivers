@@ -30,10 +30,16 @@ public class RheinContext implements ContextBuilder<Object> {
   public Context<Object> build(Context<Object> context) {
 
     Parameters p = RunEnvironment.getInstance().getParameters();
-		
+
+    // set seed for my random number generator
 	int seed = (Integer)p.getValue("rheinHelperSeed");
-		
 	RheinHelper.init(seed);
+	
+	// set stop time for batch runs
+	if (RunEnvironment.getInstance().isBatch()) {
+	  Integer endAt = (Integer)p.getValue("endAt");
+	  RunEnvironment.getInstance().endAt(endAt);
+	}
 
     Network<Object> stewardsRiversNet = NetworkFactoryFinder
         .createNetworkFactory(null).createNetwork("StewardsRivers", context,
