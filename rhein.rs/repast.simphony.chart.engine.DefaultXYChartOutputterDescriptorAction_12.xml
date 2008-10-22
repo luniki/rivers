@@ -1,13 +1,13 @@
 <repast.simphony.chart.engine.DefaultXYChartOutputterDescriptor>
   <xColumnName>Tick</xColumnName>
   <visibleXRange>100.0</visibleXRange>
-  <seriesType>LINE</seriesType>
+  <seriesType>POINT</seriesType>
   <series>
     <repast.simphony.chart.Series>
-      <seriesID>Balance</seriesID>
-      <valueColumn>Sum of TotalSpent</valueColumn>
-      <hashCode>-1940737677</hashCode>
-      <proxy>true</proxy>
+      <seriesID>Name</seriesID>
+      <valueColumn>IntThreatened</valueColumn>
+      <hashCode>-3955983</hashCode>
+      <proxy>false</proxy>
     </repast.simphony.chart.Series>
   </series>
   <showLegend>true</showLegend>
@@ -15,13 +15,13 @@
   <outputterFactory class="repast.simphony.chart.wizard.XYChartMappingsStep$XYFactory"/>
   <dataSetHandler>
     <dataSets>
-      <string>stewards</string>
+      <string>segments</string>
     </dataSets>
   </dataSetHandler>
   <streamHandler>
     <columns/>
   </streamHandler>
   <isBatchAction>false</isBatchAction>
-  <dataSetId class="string">stewards</dataSetId>
-  <name>Sum Spent Money</name>
+  <dataSetId class="string">segments</dataSetId>
+  <name>Threatened Segments</name>
 </repast.simphony.chart.engine.DefaultXYChartOutputterDescriptor>

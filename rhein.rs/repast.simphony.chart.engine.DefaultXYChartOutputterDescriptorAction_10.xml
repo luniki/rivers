@@ -4,16 +4,10 @@
   <seriesType>LINE</seriesType>
   <series>
     <repast.simphony.chart.Series>
-      <seriesID>Retentions</seriesID>
-      <valueColumn>sum_of_retention_capacities</valueColumn>
-      <hashCode>-1997784673</hashCode>
-      <proxy>true</proxy>
-    </repast.simphony.chart.Series>
-    <repast.simphony.chart.Series>
-      <seriesID>Dikes</seriesID>
-      <valueColumn>sum_of_dike_capacities</valueColumn>
-      <hashCode>1396166097</hashCode>
-      <proxy>true</proxy>
+      <seriesID>Name</seriesID>
+      <valueColumn>Overflow</valueColumn>
+      <hashCode>683864514</hashCode>
+      <proxy>false</proxy>
     </repast.simphony.chart.Series>
   </series>
   <showLegend>true</showLegend>
@@ -21,13 +15,13 @@
   <outputterFactory class="repast.simphony.chart.wizard.XYChartMappingsStep$XYFactory"/>
   <dataSetHandler>
     <dataSets>
-      <string>segments_capacities</string>
+      <string>segments</string>
     </dataSets>
   </dataSetHandler>
   <streamHandler>
     <columns/>
   </streamHandler>
   <isBatchAction>false</isBatchAction>
-  <dataSetId class="string">segments_capacities</dataSetId>
-  <name>Floodprotection Capacities</name>
+  <dataSetId class="string">segments</dataSetId>
+  <name>Overflows</name>
 </repast.simphony.chart.engine.DefaultXYChartOutputterDescriptor>

@@ -1,12 +1,18 @@
 <repast.simphony.chart.engine.DefaultXYChartOutputterDescriptor>
   <xColumnName>Tick</xColumnName>
   <visibleXRange>200.0</visibleXRange>
-  <seriesType>LINE</seriesType>
+  <seriesType>POINT</seriesType>
   <series>
     <repast.simphony.chart.Series>
       <seriesID>Name</seriesID>
-      <valueColumn>Freeboard</valueColumn>
-      <hashCode>1662711162</hashCode>
+      <valueColumn>raisedDike</valueColumn>
+      <hashCode>213677143</hashCode>
+      <proxy>false</proxy>
+    </repast.simphony.chart.Series>
+    <repast.simphony.chart.Series>
+      <seriesID>Name</seriesID>
+      <valueColumn>addedRetentionBasin</valueColumn>
+      <hashCode>1966706299</hashCode>
       <proxy>false</proxy>
     </repast.simphony.chart.Series>
   </series>
@@ -16,7 +22,6 @@
   <dataSetHandler>
     <dataSets>
       <string>segments</string>
-      <string>freeboard</string>
     </dataSets>
   </dataSetHandler>
   <streamHandler>
@@ -24,5 +29,5 @@
   </streamHandler>
   <isBatchAction>false</isBatchAction>
   <dataSetId class="string">segments</dataSetId>
-  <name>Freeboard</name>
+  <name>Built Floodprotections</name>
 </repast.simphony.chart.engine.DefaultXYChartOutputterDescriptor>

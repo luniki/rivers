@@ -1,0 +1,33 @@
+<repast.simphony.data.logging.outputter.engine.DefaultFileOutputterDescriptor>
+  <fileName>/tmp/segments.txt</fileName>
+  <insertTimeToFileName>false</insertTimeToFileName>
+  <appendToFile>false</appendToFile>
+  <writeHeader>true</writeHeader>
+  <formatType class="repast.simphony.data.logging.outputter.LMDelimitedFormatter">
+    <streamHandler>
+      <columns/>
+    </streamHandler>
+  </formatType>
+  <delimiter>,</delimiter>
+  <outputterFactory class="repast.simphony.data.logging.outputter.engine.DefaultFileOutputterDescriptor$1">
+    <outer-class reference="../.."/>
+  </outputterFactory>
+  <dataSetHandler>
+    <dataSets>
+      <string>segments</string>
+    </dataSets>
+  </dataSetHandler>
+  <streamHandler>
+    <columns>
+      <string>Run Number</string>
+      <string>Tick</string>
+      <string>Name</string>
+      <string>Freeboard</string>
+      <string>addedRetentionBasin</string>
+      <string>raisedDike</string>
+    </columns>
+  </streamHandler>
+  <isBatchAction>false</isBatchAction>
+  <dataSetId class="string">segments</dataSetId>
+  <name>segments</name>
+</repast.simphony.data.logging.outputter.engine.DefaultFileOutputterDescriptor>

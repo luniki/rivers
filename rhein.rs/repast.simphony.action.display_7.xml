@@ -3,7 +3,7 @@
   <styles>
     <entry>
       <string>rhein.Segment</string>
-      <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
+      <string>repast.simphony.visualization.visualization2D.style.DefaultStyle2D</string>
     </entry>
     <entry>
       <string>rhein.RiverScheduler</string>
@@ -25,7 +25,7 @@
   <editedStyles>
     <entry>
       <string>rhein.Segment</string>
-      <string>rhein.Segment.style_4.xml</string>
+      <null/>
     </entry>
     <entry>
       <string>rhein.RiverScheduler</string>
@@ -37,7 +37,7 @@
     </entry>
     <entry>
       <string>rhein.Steward</string>
-      <string>rhein.Steward.style_7.xml</string>
+      <string>rhein.Steward.style_5.xml</string>
     </entry>
     <entry>
       <string>rhein.Source</string>
@@ -46,13 +46,13 @@
   </editedStyles>
   <netStyles>
     <entry>
-      <string>StewardsRivers</string>
+      <string>Stewards</string>
       <string>repast.simphony.visualization.visualization2D.style.DefaultEdgeStyle2D</string>
     </entry>
   </netStyles>
   <editedNetStyles>
     <entry>
-      <string>StewardsRivers</string>
+      <string>Stewards</string>
       <null/>
     </entry>
   </editedNetStyles>
@@ -65,7 +65,7 @@
     <frequency>REPEAT</frequency>
   </schedParams>
   <layoutClassName>repast.simphony.visualization.visualization2D.layout.CircleLayout2D</layoutClassName>
-  <layoutProjection>StewardsRivers</layoutProjection>
+  <layoutProjection>Stewards</layoutProjection>
   <layoutInterval>0</layoutInterval>
   <layerOrder>
     <entry>
@@ -91,13 +91,13 @@
   </layerOrder>
   <projections>
     <repast.score.impl.SNetworkImpl>
-      <name>StewardsRivers</name>
+      <name>Stewards</name>
     </repast.score.impl.SNetworkImpl>
   </projections>
   <valueLayers/>
   <projectionDescriptors>
     <entry>
-      <string>StewardsRivers</string>
+      <string>Stewards</string>
       <repast.simphony.visualization.engine.DefaultProjectionDescriptor>
         <proj class="repast.score.impl.SNetworkImpl" reference="../../../../projections/repast.score.impl.SNetworkImpl"/>
         <props/>
@@ -105,5 +105,5 @@
     </entry>
   </projectionDescriptors>
   <props/>
-  <name>Stewards/Rivers</name>
+  <name>Stewards</name>
 </repast.simphony.visualization.engine.DefaultDisplayDescriptor>
