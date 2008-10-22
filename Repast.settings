@@ -7,14 +7,14 @@
     </default>
     <int>3</int>
     <int>5</int>
-    <string>R.home</string>
-    <string>/usr/bin/R</string>
-    <string>SettingsFileName</string>
-    <string>Repast.settings</string>
-    <string>LastLoadedScenario</string>
-    <string>/home/mlunzena/workspace/Rhein/rhein.rs</string>
     <string>SettingsRegistryId</string>
     <string>Repast.registry</string>
+    <string>LastLoadedScenario</string>
+    <string>/home/mlunzena/workspace/Rhein/rhein.rs</string>
+    <string>SettingsFileName</string>
+    <string>Repast.settings</string>
+    <string>R.home</string>
+    <string>/usr/bin/R</string>
     <string>R.licenseAccepted</string>
     <boolean>true</boolean>
   </hashtable>
