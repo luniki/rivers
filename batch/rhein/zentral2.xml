@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<sweep runs="1">
+	<parameter name="cooperationAllowed"      type="constant" constant_type="boolean" value="true"/>
+	<parameter name="costEffectivenessMetric" type="constant" constant_type="string"  value="SINGLE"/>
+	<parameter name="dikesAllowed"            type="constant" constant_type="boolean" value="false"/>
+
+	<parameter name="dikeBaseCost"            type="constant" constant_type="number"  value="250.0"/>
+	<parameter name="dikeCostPerCubicMeter"   type="constant" constant_type="number"  value="0.5"/>
+	<parameter name="endAt"                   type="constant" constant_type="number"  value="150" />
+	<parameter name="numberOfLastInflows"     type="constant" constant_type="number"  value="25"/>
+	<parameter name="rheinHelperSeed"         type="constant" constant_type="number"  value="0" />
+	<parameter name="stewardPayment"          type="constant" constant_type="number"  value="10000"/>
+	<parameter name="stewardStartBalance"     type="constant" constant_type="number"  value="200000"/>
+</sweep>
