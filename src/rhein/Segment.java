@@ -165,14 +165,14 @@ public class Segment extends AbstractSegment {
    */
 	public void generatePossibleRetentionBasin() {
 
+		// TODO vielleicht lieber nicht über den generator?
+		RetentionBasin retentionBasin = new RetentionBasinGenerator()
+		.generateRetentionBasin();
+
 		// TODO 3? wieso 3?
 		if (naturalDike || possibleRetentionBasins.size() > 3) {
 			return;
 		}
-
-		// TODO vielleicht lieber nicht über den generator?
-		RetentionBasin retentionBasin = new RetentionBasinGenerator()
-				.generateRetentionBasin();
 
 		if (retentionBasin != null) {
 			possibleRetentionBasins.add(retentionBasin);
