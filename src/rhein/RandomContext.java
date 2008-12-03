@@ -32,7 +32,7 @@ public class RandomContext implements ContextBuilder<Object> {
     // set seed for my random number generator
 	int seed = (Integer)p.getValue("rheinHelperSeed");
 	RheinHelper.init(seed);
-	
+
 	// set stop time for batch runs
 	if (RunEnvironment.getInstance().isBatch()) {
 	  Integer endAt = (Integer)p.getValue("endAt");
@@ -108,7 +108,11 @@ public class RandomContext implements ContextBuilder<Object> {
         segment.generatePossibleRetentionBasin();
         segment.generatePossibleRetentionBasin();
         segment.generatePossibleRetentionBasin();
-        
+
+        if (j == SEGMENTS / 2)) {
+          segment.setNaturalDike(true);
+        }
+
         context.add(source);
         context.add(segment);
 
