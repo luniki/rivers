@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <sweep runs="1">
 	<parameter name="endAt"                 type="constant" constant_type="number" value="150" />
+	<parameter name="contextBuilder"        type="constant" constant_type="string"  value="rhein"/>
 	<parameter name="dikeBaseCost"          type="constant" constant_type="number"  value="250.0"/>
 	<parameter name="dikeCostPerCubicMeter" type="constant" constant_type="number"  value="0.5"/>
 	<parameter name="stewardStartBalance"   type="constant" constant_type="number"  value="200000"/>

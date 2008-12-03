@@ -4,6 +4,7 @@
 	<parameter name="costEffectivenessMetric" type="constant" constant_type="string"  value="SINGLE"/>
 	<parameter name="dikesAllowed"            type="constant" constant_type="boolean" value="false"/>
 
+	<parameter name="contextBuilder"          type="constant" constant_type="string"  value="rhein"/>
 	<parameter name="dikeBaseCost"            type="constant" constant_type="number"  value="250.0"/>
 	<parameter name="dikeCostPerCubicMeter"   type="constant" constant_type="number"  value="0.5"/>
 	<parameter name="endAt"                   type="constant" constant_type="number"  value="150" />

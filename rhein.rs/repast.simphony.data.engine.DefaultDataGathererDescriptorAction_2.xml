@@ -1,5 +1,5 @@
 <repast.simphony.data.engine.DefaultDataGathererDescriptor>
-  <dataSetId class="string">stewards</dataSetId>
+  <dataSetId class="string">segments_capacities</dataSetId>
   <scheduleParameters>
     <start>1.0</start>
     <interval>1.0</interval>
@@ -8,84 +8,31 @@
     <frequency>REPEAT</frequency>
   </scheduleParameters>
   <dataMappingContainer class="repast.simphony.data.logging.gather.DefaultDataMappingContainer">
-    <nameMappingTable>
-      <entry>
-        <string>TotalSpent</string>
-        <repast.simphony.data.logging.gather.MethodMapping>
-          <method>
-            <class>rhein.Steward</class>
-            <name>getTotalSpent</name>
-            <parameter-types/>
-          </method>
-        </repast.simphony.data.logging.gather.MethodMapping>
-      </entry>
-      <entry>
-        <string>Name</string>
-        <repast.simphony.data.logging.gather.MethodMapping>
-          <method>
-            <class>rhein.Steward</class>
-            <name>getName</name>
-            <parameter-types/>
-          </method>
-        </repast.simphony.data.logging.gather.MethodMapping>
-      </entry>
-      <entry>
-        <string>Tick</string>
-        <repast.simphony.data.logging.gather.DefaultTimeDataMapping/>
-      </entry>
-      <entry>
-        <string>Balance</string>
-        <repast.simphony.data.logging.gather.MethodMapping>
-          <method>
-            <class>rhein.Steward</class>
-            <name>getBalance</name>
-            <parameter-types/>
-          </method>
-        </repast.simphony.data.logging.gather.MethodMapping>
-      </entry>
-      <entry>
-        <string>Run Number</string>
-        <repast.simphony.data.logging.gather.RunNumberMapping>
-          <runNumber>1</runNumber>
-        </repast.simphony.data.logging.gather.RunNumberMapping>
-      </entry>
-    </nameMappingTable>
-    <mappingNameTable>
-      <entry>
-        <repast.simphony.data.logging.gather.DefaultTimeDataMapping reference="../../../nameMappingTable/entry[3]/repast.simphony.data.logging.gather.DefaultTimeDataMapping"/>
-        <string>Tick</string>
-      </entry>
-      <entry>
-        <repast.simphony.data.logging.gather.MethodMapping reference="../../../nameMappingTable/entry[4]/repast.simphony.data.logging.gather.MethodMapping"/>
-        <string>Balance</string>
-      </entry>
-      <entry>
-        <repast.simphony.data.logging.gather.RunNumberMapping reference="../../../nameMappingTable/entry[5]/repast.simphony.data.logging.gather.RunNumberMapping"/>
-        <string>Run Number</string>
-      </entry>
-      <entry>
-        <repast.simphony.data.logging.gather.DefaultTimeDataMapping/>
-        <string>Tick</string>
-      </entry>
-      <entry>
-        <repast.simphony.data.logging.gather.MethodMapping reference="../../../nameMappingTable/entry/repast.simphony.data.logging.gather.MethodMapping"/>
-        <string>TotalSpent</string>
-      </entry>
-      <entry>
-        <repast.simphony.data.logging.gather.MethodMapping reference="../../../nameMappingTable/entry[2]/repast.simphony.data.logging.gather.MethodMapping"/>
-        <string>Name</string>
-      </entry>
-    </mappingNameTable>
+    <nameMappingTable/>
+    <mappingNameTable/>
   </dataMappingContainer>
   <aggregateContainer class="repast.simphony.data.logging.gather.DefaultAggregateDataMappingContainer">
     <nameMappingTable>
       <entry>
-        <string>Sum of TotalSpent</string>
+        <string>sum_of_retention_capacities</string>
         <repast.simphony.data.logging.gather.aggregate.SumMapping>
           <decorated class="repast.simphony.data.logging.gather.MethodMapping">
             <method>
-              <class>rhein.Steward</class>
-              <name>getTotalSpent</name>
+              <class>rhein.Segment</class>
+              <name>getRetainable</name>
+              <parameter-types/>
+            </method>
+          </decorated>
+          <type>Sum</type>
+        </repast.simphony.data.logging.gather.aggregate.SumMapping>
+      </entry>
+      <entry>
+        <string>sum_of_dike_capacities</string>
+        <repast.simphony.data.logging.gather.aggregate.SumMapping>
+          <decorated class="repast.simphony.data.logging.gather.MethodMapping">
+            <method>
+              <class>rhein.Segment</class>
+              <name>getDikeCapacity</name>
               <parameter-types/>
             </method>
           </decorated>
@@ -97,50 +44,50 @@
         <repast.simphony.data.logging.gather.DefaultTimeDataMapping/>
       </entry>
       <entry>
-        <string>Sum of Balances</string>
+        <string>Run Number</string>
+        <repast.simphony.data.logging.gather.RunNumberMapping>
+          <runNumber>1</runNumber>
+        </repast.simphony.data.logging.gather.RunNumberMapping>
+      </entry>
+      <entry>
+        <string>sum_of_overflow</string>
         <repast.simphony.data.logging.gather.aggregate.SumMapping>
           <decorated class="repast.simphony.data.logging.gather.MethodMapping">
             <method>
-              <class>rhein.Steward</class>
-              <name>getBalance</name>
+              <class>rhein.Segment</class>
+              <name>getOverflow</name>
               <parameter-types/>
             </method>
           </decorated>
           <type>Sum</type>
         </repast.simphony.data.logging.gather.aggregate.SumMapping>
       </entry>
-      <entry>
-        <string>Run Number</string>
-        <repast.simphony.data.logging.gather.RunNumberMapping>
-          <runNumber>1</runNumber>
-        </repast.simphony.data.logging.gather.RunNumberMapping>
-      </entry>
     </nameMappingTable>
     <mappingNameTable>
-      <entry>
-        <repast.simphony.data.logging.gather.DefaultTimeDataMapping reference="../../../nameMappingTable/entry[2]/repast.simphony.data.logging.gather.DefaultTimeDataMapping"/>
-        <string>Tick</string>
-      </entry>
       <entry>
         <repast.simphony.data.logging.gather.RunNumberMapping reference="../../../nameMappingTable/entry[4]/repast.simphony.data.logging.gather.RunNumberMapping"/>
         <string>Run Number</string>
       </entry>
       <entry>
-        <repast.simphony.data.logging.gather.DefaultTimeDataMapping/>
+        <repast.simphony.data.logging.gather.aggregate.SumMapping reference="../../../nameMappingTable/entry[2]/repast.simphony.data.logging.gather.aggregate.SumMapping"/>
+        <string>sum_of_dike_capacities</string>
+      </entry>
+      <entry>
+        <repast.simphony.data.logging.gather.aggregate.SumMapping reference="../../../nameMappingTable/entry[5]/repast.simphony.data.logging.gather.aggregate.SumMapping"/>
+        <string>sum_of_overflow</string>
+      </entry>
+      <entry>
+        <repast.simphony.data.logging.gather.DefaultTimeDataMapping reference="../../../nameMappingTable/entry[3]/repast.simphony.data.logging.gather.DefaultTimeDataMapping"/>
         <string>Tick</string>
       </entry>
       <entry>
         <repast.simphony.data.logging.gather.aggregate.SumMapping reference="../../../nameMappingTable/entry/repast.simphony.data.logging.gather.aggregate.SumMapping"/>
-        <string>Sum of TotalSpent</string>
-      </entry>
-      <entry>
-        <repast.simphony.data.logging.gather.aggregate.SumMapping reference="../../../nameMappingTable/entry[3]/repast.simphony.data.logging.gather.aggregate.SumMapping"/>
-        <string>Sum of Balances</string>
+        <string>sum_of_retention_capacities</string>
       </entry>
     </mappingNameTable>
     <alternatedNameTable/>
     <nameAlternatedTable/>
   </aggregateContainer>
-  <agentClass>rhein.Steward</agentClass>
-  <name>Stewards</name>
+  <agentClass>rhein.Segment</agentClass>
+  <name>Segment Capacities</name>
 </repast.simphony.data.engine.DefaultDataGathererDescriptor>

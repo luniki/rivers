@@ -8,6 +8,7 @@
   <attributes label="Cooperation Allowed" ID="cooperationAllowed" pluralLabel="Cooperation Alloweds" defaultValue=""/>
   <attributes label="Number of Last Inflows" ID="numberOfLastInflows" pluralLabel="Number of Last Inflowss" sType="INTEGER" defaultValue="25"/>
   <attributes label="RheinHelper Seed" ID="rheinHelperSeed" pluralLabel="RheinHelper Seeds" sType="INTEGER" defaultValue="0"/>
+  <attributes label="ContextBuilder" ID="contextBuilder" pluralLabel="ContextBuilders" sType="STRING" defaultValue="rhein"/>
   <implementation package="rhein" className="" basePath="../Rhein" mode="AUTO"/>
   <agents label="Steward" ID="steward" pluralLabel="Stewards">
     <attributes label="initialCount" ID="initialCount" pluralLabel="initialCounts" defaultValue="3"/>
