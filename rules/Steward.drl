@@ -11,21 +11,6 @@ import rhein.RheinHelper;
 import rhein.Segment;
 import rhein.Steward;
 
-/*
-- für jeden steward:
-	- mögliche aktionen generieren
-		- immer oder nur bei bedarf?
-	- normen anwenden
-		- was ist mit konfligierenden normen?
-	- wenn kein bedarf besteht, aktionen abbrechen
-	- was passiert, wenn ich bedarf aber keine aktion habe?
-		- wenn man jemanden direkt stromaufwärts kennt, kann man dem eine aktion hinterlegen
-- und nocheinmal für jeden:
-	- welche aktion nehmen?
-		- die teuerste von jemanden anderen
-		- die effektivste für mich
-*/
-
 
 query "all floodprotections"
     floodprotection : FloodProtection( )
@@ -42,6 +27,7 @@ end
 rule "Action Generation: raise dike"
 		ruleflow-group "action_generation"
 	when
+	    eval( RheinHelper.dikesAllowed() )
 		$me: Steward( )
 		$segment: Segment( threatened == true , dikeCapacity < maxDikeCapacity )
 	then
@@ -64,7 +50,6 @@ rule "Action Generation: retention basin"
 		System.out.format("  >>> retention generated %s\n", action);
 end
 
-/**/
 rule "Action Generation: no floodprotection yet but in need"
 		salience -1
 		ruleflow-group "action_generation"
@@ -74,6 +59,7 @@ rule "Action Generation: no floodprotection yet but in need"
 		not ( exists  FloodProtection( segment == $segment ) )
 		eval ( RheinHelper.cooperationAllowed() )
 	then
+		System.out.println("@@@Coop@@@");
 		Segment upstream = $segment.getUpstreamRetentionBasins();
 		if (upstream != null) {
 			for (RetentionBasin retention : upstream.getPossibleRetentionBasins()) {
@@ -88,7 +74,6 @@ rule "Action Generation: no floodprotection yet but in need"
 						      $segment.getName());
 		}
 end
-/**/
 
 //
 //
@@ -97,8 +82,8 @@ end
 //
 
 
+// Agents must not choose a Floodprotection Action for a RiverSegment that is not threatened.
 rule "Norm: Don’t build own flood protection in not threatened segments"
-	// Agents must not choose a Floodprotection Action for a RiverSegment that is not threatened.
 		ruleflow-group "norms"
 	when
 		$me: Steward( )
@@ -114,7 +99,6 @@ end
 //    Agents must not choose an Action which costs more than their accumulated
 //    resources minus obligatory payment for already chosen actions.
 rule "Norm: Don’t decide measures which cost more than you can afford"
-    // TODO und wie stell ich sicher, dass ich nur eine Aktion mache und die dann auch bezahlen kann?
 		ruleflow-group "norms"
 	when
 		$floodprotection: FloodProtection( payer.balance < cost )
@@ -158,41 +142,12 @@ rule "remove own floodprotections if someone else wants one"
 		System.out.format("  >>> retracted own %s\n", $f);
 end
 
-rule "Don't raise dikes, unless allowed"
-	// Agents must not choose a RaiseDike Action.
-	when
-		$raise: RaiseDike( )
-		not( eval( RheinHelper.dikesAllowed() ) )
-	then
-		System.out.format("  >>> no dikes, retracted %s\n", $raise);
-		retract($raise);
-end
-/**/
-
-
-/*
-rule "choose floodprotection"
-		ruleflow-group "action_selection"
-		salience 0
-	when
-		$segment: Segment(  )
-		// TODO using hashCode is a hack, isn't it?
-		$f1: FloodProtection( segment == $segment, $efficiency: costEffectiveness, $hashCode: hashCode  )
-		$f2: FloodProtection( segment == $segment, costEffectiveness <= $efficiency, hashCode != $hashCode  )
-	then
-		$segment.removePossibleAction($f2);
-		System.out.format("  >>> retracted inferior %s\n", $f2);
-		retract($f2);
-end
-/**/
-
 rule "choose floodprotection using SINGLE metric"
 		ruleflow-group "action_selection"
 		salience 0
 	when
 		eval ( RheinHelper.costEffectivenessMetric().equals("SINGLE") )
 		$segment: Segment(  )
-		// TODO using hashCode is a hack, isn't it?
 		$f1: FloodProtection( segment == $segment, $efficiency: costEffectiveness, $hashCode: hashCode  )
 		$f2: FloodProtection( segment == $segment, costEffectiveness <= $efficiency, hashCode != $hashCode  )
 	then
@@ -207,7 +162,6 @@ rule "choose floodprotection using SUBBASIN metric"
 	when
 		eval ( RheinHelper.costEffectivenessMetric().equals("SUBBASIN") )
 		$segment: Segment(  )
-		// TODO using hashCode is a hack, isn't it?
 		$f1: FloodProtection( segment == $segment, $efficiency: subbasinCostEffectiveness, $hashCode: hashCode  )
 		$f2: FloodProtection( segment == $segment, subbasinCostEffectiveness <= $efficiency, hashCode != $hashCode  )
 	then
@@ -222,7 +176,6 @@ rule "choose floodprotection using WHOLE metric"
 	when
 		eval ( RheinHelper.costEffectivenessMetric().equals("WHOLE") )
 		$segment: Segment(  )
-		// TODO using hashCode is a hack, isn't it?
 		$f1: FloodProtection( segment == $segment, $efficiency: wholeBasinCostEffectiveness, $hashCode: hashCode  )
 		$f2: FloodProtection( segment == $segment, wholeBasinCostEffectiveness <= $efficiency, hashCode != $hashCode  )
 	then
@@ -230,4 +183,3 @@ rule "choose floodprotection using WHOLE metric"
 		System.out.format("  >>> retracted inferior using WHOLE metric %s\n", $f2);
 		retract($f2);
 end
-/**/

@@ -63,8 +63,8 @@ public class RandomContext implements ContextBuilder<Object> {
     //
     // //////////////////////////////
 
-    int RIVERS = 5;
-    int SEGMENTS = 5;
+    int RIVERS = 6;
+    int SEGMENTS = 6;
 
     Steward stewards[][] = new Steward[RIVERS][SEGMENTS];
     for (int i = 0; i < RIVERS; i++) {
@@ -98,7 +98,7 @@ public class RandomContext implements ContextBuilder<Object> {
       for (int j = 0; j < SEGMENTS; j++) {
         int mean = RheinHelper.nextIntFromTo(1500, 4000);
         int stddev = RheinHelper.nextIntFromTo(250, 650);
-        Source source = new Source("Souce " + i + "-" + j, mean, stddev);
+        Source source = new Source("Source " + i + "-" + j, mean, stddev);
 
         int length = RheinHelper.nextIntFromTo(50, 250);
         int capacity = RheinHelper.nextIntFromTo(5, 15) * 1000;
@@ -109,7 +109,7 @@ public class RandomContext implements ContextBuilder<Object> {
         segment.generatePossibleRetentionBasin();
         segment.generatePossibleRetentionBasin();
 
-        if (j == SEGMENTS / 2)) {
+        if (j == SEGMENTS / 2) {
           segment.setNaturalDike(true);
         }
 

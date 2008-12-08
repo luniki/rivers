@@ -43,15 +43,15 @@ public class Steward {
    */
 	private String name;
 
+	static {
+		loadRuleFile();
+	}
+	
 	/**
-   *
-   */
-	private RuleBase ruleBase;
+     *
+     */
+	private static RuleBase ruleBase;
 
-	/**
-   *
-   */
-	private StatefulSession session;
 
 	/**
 	 * Contains the sum of all the money spent to build or enhance flood
@@ -70,11 +70,8 @@ public class Steward {
 	 * Bean constructor.
 	 */
 	public Steward(String name, long balance) {
-
 		this.name = name;
 		setBalance(balance);
-
-		loadRuleFile();
 	}
 
 	public void addPropertyChangeListener(final PropertyChangeListener l) {
@@ -84,7 +81,7 @@ public class Steward {
 	// @ScheduledMethod(start = 1, interval = 1, priority = -1, shuffle = false)
 	public void chooseActions() {
 
-		session = ruleBase.newStatefulSession();
+		StatefulSession session = getSession();
 		session.insert(this, true);
 
 		for (Segment segment : getSegments()) {
@@ -108,6 +105,10 @@ public class Steward {
 		}
 	}
 
+	private StatefulSession getSession() {
+		return ruleBase.newStatefulSession();
+	}
+
 	/**
 	 * @param amount
 	 */
@@ -118,7 +119,7 @@ public class Steward {
 	// @ScheduledMethod(start = 1, interval = 1, priority = 0, shuffle = false)
 	public void generatePossibleActions() {
 
-		session = ruleBase.newStatefulSession();
+		StatefulSession session = getSession();
 		session.insert(this, true);
 
 		for (Segment segment : getSegments()) {
@@ -183,7 +184,7 @@ public class Steward {
 	/**
    *
    */
-	private void loadRuleFile() {
+	private static void loadRuleFile() {
 		try {
 
 			ClassLoader classLoader = Steward.class.getClassLoader();
