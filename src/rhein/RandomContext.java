@@ -105,12 +105,14 @@ public class RandomContext implements ContextBuilder<Object> {
 
         Segment segment = new Segment("Segment " + i + "-" + j, length,
             capacity, 0);
-        segment.generatePossibleRetentionBasin();
-        segment.generatePossibleRetentionBasin();
-        segment.generatePossibleRetentionBasin();
 
         if (j == SEGMENTS / 2) {
+          segment.setMaxDikeCapacity(capacity);
           segment.setNaturalDike(true);
+        } else {
+          segment.generatePossibleRetentionBasin();
+          segment.generatePossibleRetentionBasin();
+          segment.generatePossibleRetentionBasin();
         }
 
         context.add(source);
